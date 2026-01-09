@@ -1,0 +1,21 @@
+# Node
+node_modules
+
+# Environment files
+.env.local
+.env.production
+
+!.env.example 
+
+# Logs
+logs
+*.log
+
+# Test / build
+coverage
+dist
+
+# OS / Editor
+.DS_Store
+.vscode
+.idea

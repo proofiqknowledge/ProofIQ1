@@ -1,0 +1,51 @@
+.reexam-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.reexam-btn-default {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.reexam-btn-default:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.reexam-btn-pending {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.reexam-btn-pending:hover:not(:disabled) {
+  background-color: #d97706;
+}
+
+.reexam-btn-approved {
+  background-color: #10b981;
+  color: white;
+}
+
+.reexam-btn-approved:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.reexam-btn-rejected {
+  background-color: #ef4444;
+  color: white;
+}
+
+.reexam-btn-rejected:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.reexam-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
