@@ -40,7 +40,7 @@ exports.downloadCertificate = async (req, res) => {
         .fillColor('orange').text('🏅 100 Reward Points Badge!', { align: 'center' }).fillColor('black');
     }
     doc.moveDown(4);
-    doc.fontSize(12).text('PeopleTech LMS Platform', { align: 'center', baseline: 'bottom' });
+    doc.fontSize(12).text('ProofIQ Platform', { align: 'center', baseline: 'bottom' });
     doc.end();
     doc.pipe(res);
   } catch (err) {
