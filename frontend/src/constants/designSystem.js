@@ -1,4 +1,4 @@
-// Professional Design System for PeopleTech LMS
+// Professional Design System for ProofIQ
 export const COLORS = {
   // Primary - Company Maroon
   primary: '#9B1C36',

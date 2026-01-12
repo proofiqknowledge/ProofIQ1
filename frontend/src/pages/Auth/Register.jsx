@@ -85,7 +85,7 @@ export default function Register() {
 
       localStorage.setItem('token', res.token);
 
-      toast.success('🎉 Registration successful! Welcome to PeopleTech LMS.', {
+      toast.success('🎉 Registration successful! Welcome to ProofIQ.', {
         position: 'top-center',
         autoClose: 3000,
         theme: 'light',
@@ -259,7 +259,7 @@ export default function Register() {
       <div style={cardStyle}>
         {/* Header */}
         <div style={headerStyle}>
-          <div style={brandStyle}>PeopleTech LMS</div>
+          <div style={brandStyle}>ProofIQ</div>
           <p style={subtitleStyle}>Sign up to start learning — choose your role</p>
         </div>
 

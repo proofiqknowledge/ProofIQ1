@@ -266,7 +266,7 @@ export default function Login() {
       <div style={cardStyle}>
         {/* Header */}
         <div style={headerStyle}>
-          <div style={brandStyle}>PeopleTech LMS</div>
+          <div style={brandStyle}>ProofIQ</div>
           <p style={subtitleStyle}>Login to continue your learning journey</p>
         </div>
 
@@ -284,7 +284,7 @@ export default function Login() {
               onMouseEnter={(e) => { if (!loading) e.target.style.backgroundColor = '#000000'; }}
               onMouseLeave={(e) => { if (!loading) e.target.style.backgroundColor = '#2F2F2F'; }}
             >
-              {loading && localStorage.getItem('msal_tenant') === 'ptg' ? 'Redirecting...' : <><FaMicrosoft /> Sign in with PeopleTech</>}
+              {loading && localStorage.getItem('msal_tenant') === 'ptg' ? 'Redirecting...' : <><FaMicrosoft /> Sign in with ProofIQ</>}
             </button>
 
             <button

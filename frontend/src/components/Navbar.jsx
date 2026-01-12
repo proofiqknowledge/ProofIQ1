@@ -111,7 +111,7 @@ export default function Navbar() {
       {/* LEFT SIDE - Logo */}
       <div style={navbarLeftStyle}>
         <Link to="/" style={{ ...navbarBrandStyle }}>
-          PeopleTech LMS
+          ProofIQ
         </Link>
       </div>
 

@@ -183,7 +183,7 @@ export default function ForgotPassword() {
       <div style={cardStyle}>
         {/* Header */}
         <div style={headerStyle}>
-          <div style={brandStyle}>PeopleTech LMS</div>
+          <div style={brandStyle}>ProofIQ</div>
           <p style={subtitleStyle}>Reset Your Password</p>
         </div>
 

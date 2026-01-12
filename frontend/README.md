@@ -1,4 +1,4 @@
-# PeopleTech LMS - Frontend
+# ProofIQ - Frontend
 
 A responsive LMS platform for internal company training, built with:
 - Vite + React

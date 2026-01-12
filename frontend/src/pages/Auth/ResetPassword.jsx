@@ -202,7 +202,7 @@ export default function ResetPassword() {
       <div style={cardStyle}>
         {/* Header */}
         <div style={headerStyle}>
-          <div style={brandStyle}>PeopleTech LMS</div>
+          <div style={brandStyle}>ProofIQ</div>
           <p style={subtitleStyle}>Set a new password for your account</p>
         </div>
 
