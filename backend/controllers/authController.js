@@ -1,6 +1,6 @@
 // Authentication controller handling login, registration and user authentication
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { sendResetEmail } = require('../utils/emailSender');
@@ -50,8 +50,8 @@ exports.register = async (req, res) => {
     }
 
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    const salt = await bcryptjs.genSalt(10);
+    const passwordHash = await bcryptjs.hash(password, salt);
 
     // Create user object
     const createObj = {
@@ -96,28 +96,81 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+
+    // ✅ Validate input
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
+
+    // ✅ Find user by email (case-insensitive)
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
+      console.warn(`⚠️ [AUTH] Login attempt with non-existent email: ${email}`);
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
 
+    // ✅ Check if user is active
+    if (!user.isActive) {
+      console.warn(`⚠️ [AUTH] Login attempt from inactive user: ${email}`);
+      return res.status(403).json({ message: 'Account is inactive. Please contact support.' });
+    }
+
+    // ✅ Check if user is blocked
     if (user.isBlocked) {
+      console.warn(`⚠️ [AUTH] Login attempt from blocked user: ${email}`);
       return res.status(403).json({ message: 'Your account has been blocked by the administrator.' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch) {
+    // ✅ Verify password using bcryptjs
+    let isPasswordMatch = false;
+    try {
+      isPasswordMatch = await bcryptjs.compare(password, user.passwordHash);
+      console.log(`🔐 [AUTH] Password comparison result for ${email}: ${isPasswordMatch}`);
+    } catch (compareError) {
+      console.error(`❌ [AUTH] Password comparison error for ${email}:`, compareError.message);
+      return res.status(500).json({ message: 'Authentication failed. Please try again.' });
+    }
+
+    if (!isPasswordMatch) {
+      console.warn(`⚠️ [AUTH] Failed login attempt (wrong password) for: ${email}`);
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
+
+    // ✅ Validate JWT_SECRET
     if (!process.env.JWT_SECRET) {
-      console.error('JWT_SECRET is not set in environment');
+      console.error('❌ [AUTH] JWT_SECRET is not set in environment');
       return res.status(500).json({ message: 'Server misconfiguration: JWT secret missing' });
     }
-    const token = jwt.sign({ id: user._id, role: user.role.charAt(0).toUpperCase() + user.role.slice(1) }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token, user: { id: user._id, name: user.name, role: user.role.charAt(0).toUpperCase() + user.role.slice(1) } });
+
+    // ✅ Generate JWT token
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    console.log(`✅ [AUTH] Successful login for: ${email} (${user.role})`);
+
+    // ✅ Return safe user response
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        batch: user.batch,
+        employeeId: user.employeeId,
+        rewardPoints: user.rewardPoints
+      }
+    });
   } catch (err) {
-    console.error('Login error:', err && err.stack ? err.stack : err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('❌ [AUTH] Unexpected login error:', err && err.stack ? err.stack : err);
+    res.status(500).json({ message: 'Server error during login', error: process.env.NODE_ENV === 'development' ? err.message : undefined });
   }
 };
 
@@ -177,8 +230,8 @@ exports.resetPassword = async (req, res) => {
     const user = await User.findOne({ _id: userId, resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
     if (!user) return res.status(400).json({ message: 'Invalid or expired reset token' });
 
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    const salt = await bcryptjs.genSalt(10);
+    const passwordHash = await bcryptjs.hash(password, salt);
     user.passwordHash = passwordHash;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;

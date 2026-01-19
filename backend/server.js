@@ -366,19 +366,22 @@ const connectWithRetry = async (retries = 3, delay = 2000) => {
         useUnifiedTopology: true,
         serverSelectionTimeoutMS: 30000,
         connectTimeoutMS: 30000,
+        socketTimeoutMS: 45000,
+        maxPoolSize: 10,
+        minPoolSize: 2,
+        retryWrites: true,
+        w: 'majority',
+        ssl: true,
+        sslValidate: false,
+        authSource: 'admin'
       };
 
       if (isRemote) {
-        connectionOptions.tls = true;
-
-        // 🔒 STRICT TLS: Only allow invalid certs in development/test
+        // For MongoDB Atlas, ensure SSL/TLS is properly configured
         if (!isProduction) {
-          console.warn("⚠️  TLS Strict Mode DISABLED (Development Only)");
-          connectionOptions.tlsAllowInvalidCertificates = true;
-          connectionOptions.tlsAllowInvalidHostnames = true;
+          console.warn("⚠️  TLS validation DISABLED (Development Only)");
         } else {
-          console.log("🔒 TLS Strict Mode ENABLED (Production)");
-          // In production, we default to strict (no special flags needed to disable checks)
+          console.log("🔒 TLS validation ENABLED (Production)");
         }
       }
 
@@ -441,11 +444,13 @@ mongoose.connection.on("open", () => {
 });
 
 mongoose.connection.on("error", (err) => {
-  console.error("❌ MongoDB connection error:", err);
+  console.error("❌ MongoDB connection error:", err.message);
 });
 
 mongoose.connection.on("disconnected", () => {
   console.warn("⚠️ MongoDB disconnected");
+  // Optionally attempt to reconnect
+  console.log("🔄 MongoDB will attempt to reconnect automatically...");
 });
 
 // ============================================

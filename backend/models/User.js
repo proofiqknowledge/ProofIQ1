@@ -63,7 +63,6 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['Master', 'Admin', 'Trainer', 'Student'],
-    enum: ['Master', 'Admin', 'Trainer', 'Student'],
     default: 'Student',
   },
   authType: {
@@ -74,6 +73,7 @@ const userSchema = new mongoose.Schema({
   batch: { type: mongoose.Schema.Types.ObjectId, ref: 'Batch' },
   rewardPoints: { type: Number, default: 0 },
   isBlocked: { type: Boolean, default: false },
+  isActive: { type: Boolean, default: true },
   enrolledCourses: [enrolledCourseSchema],
 }, { timestamps: true });
 
