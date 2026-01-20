@@ -14,6 +14,8 @@ import {
 import InviteRequestModal from '../../components/InviteRequestModal';
 import StudyGroupCard from '../../components/StudyGroupCard';
 
+import './StudyGroups.css';
+
 const StudyGroupsPage = () => {
     const [activeTab, setActiveTab] = useState('groups');
     const [loading, setLoading] = useState(true);
@@ -121,20 +123,15 @@ const StudyGroupsPage = () => {
     };
 
     return (
-        <div className="p-6 max-w-7xl mx-auto min-h-screen bg-gray-950 text-gray-100">
+        <div className="study-groups-container">
             {/* Header Section */}
-            <div className="mb-10 relative">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -z-10"></div>
-                <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
-                    Combined Study
-                </h1>
-                <p className="text-gray-400 text-lg max-w-2xl">
-                    Form study groups, collaborate on complex problems, and accelerate your learning journey with peers from your batch.
-                </p>
+            <div className="sg-header">
+                <h1>Combined Study</h1>
+                <p>Form study groups, collaborate on complex problems, and accelerate your learning journey with peers from your batch.</p>
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex items-center gap-2 mb-8 bg-[#1e1e1e] p-1.5 rounded-xl w-fit border border-white/5">
+            <div className="sg-tabs">
                 {[
                     { id: 'groups', label: 'My Groups', icon: Users },
                     { id: 'requests', label: 'Requests', icon: Mail, count: requests.length },
@@ -143,15 +140,12 @@ const StudyGroupsPage = () => {
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all font-medium text-sm ${activeTab === tab.id
-                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
-                            : 'text-gray-400 hover:text-white hover:bg-white/5'
-                            }`}
+                        className={`sg-tab-button ${activeTab === tab.id ? 'active' : ''}`}
                     >
                         <tab.icon size={16} />
                         {tab.label}
                         {tab.count > 0 && (
-                            <span className="ml-1.5 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                            <span className="sg-badge">
                                 {tab.count}
                             </span>
                         )}
@@ -160,28 +154,27 @@ const StudyGroupsPage = () => {
             </div>
 
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-32">
+                <div className="flex-center" style={{ padding: '5rem 0' }}>
                     <Loader2 className="animate-spin text-blue-500 mb-4" size={48} />
-                    <p className="text-gray-500 animate-pulse">Loading community data...</p>
                 </div>
             ) : (
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="animate-in">
 
                     {/* GROUPS TAB */}
                     {activeTab === 'groups' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="sg-grid">
                             {groups.length === 0 ? (
-                                <div className="col-span-full flex flex-col items-center justify-center py-24 bg-[#111111] rounded-2xl border border-white/5 border-dashed">
-                                    <div className="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mb-6">
-                                        <Users className="text-gray-600" size={40} />
+                                <div className="sg-empty-state">
+                                    <div className="sg-empty-icon">
+                                        <Users size={40} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-2">No Active Groups</h3>
-                                    <p className="text-gray-400 mb-8 max-w-md text-center">
+                                    <h3 className="sg-empty-title">No Active Groups</h3>
+                                    <p className="sg-empty-text">
                                         You haven't joined any groups yet. Find partners to start your collaborative learning journey.
                                     </p>
                                     <button
                                         onClick={() => setActiveTab('find')}
-                                        className="bg-white text-black hover:bg-gray-200 px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2"
+                                        className="sg-button-primary"
                                     >
                                         <UserPlus size={18} />
                                         Find Partners
@@ -205,58 +198,55 @@ const StudyGroupsPage = () => {
 
                     {/* REQUESTS TAB */}
                     {activeTab === 'requests' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="sg-grid">
                             {requests.length === 0 ? (
-                                <div className="col-span-full flex flex-col items-center justify-center py-20">
-                                    <Mail className="text-gray-700 mb-4" size={48} />
-                                    <p className="text-gray-500 text-lg">No pending requests at the moment.</p>
+                                <div className="sg-empty-state" style={{ background: 'transparent', border: 'none' }}>
+                                    <Mail className="sg-empty-icon" style={{ background: 'transparent' }} size={48} />
+                                    <p className="sg-empty-text">No pending requests at the moment.</p>
                                 </div>
                             ) : (
                                 requests.map(req => (
-                                    <div key={req._id} className="bg-[#1e1e1e] border border-white/10 p-6 rounded-2xl shadow-xl hover:border-blue-500/30 transition-all group">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                                    <div key={req._id} className="sg-req-card">
+                                        <div className="sg-req-header">
+                                            <div className="sg-req-user">
+                                                <div className="sg-member-avatar">
                                                     {req.fromUser?.name?.charAt(0)}
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-white">{req.fromUser?.name}</p>
-                                                    <p className="text-blue-400 text-xs font-medium">Invitation Request</p>
+                                                    <p style={{ color: 'white', fontWeight: 'bold' }}>{req.fromUser?.name}</p>
+                                                    <p style={{ color: '#60a5fa', fontSize: '0.75rem' }}>Invitation Request</p>
                                                 </div>
                                             </div>
-                                            <span className="text-xs bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full border border-yellow-500/20 uppercase tracking-wide font-bold">
+                                            <span className="sg-req-status">
                                                 {req.status}
                                             </span>
                                         </div>
 
                                         {req.groupId && (
-                                            <div className="bg-[#111] p-4 rounded-xl mb-4 border border-white/5">
-                                                <p className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">Invited to Group</p>
-                                                <p className="text-white font-semibold flex items-center gap-2">
-                                                    <Users size={14} className="text-blue-500" />
+                                            <div style={{ background: '#111', padding: '1rem', borderRadius: '0.75rem', marginBottom: '1rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                                <p style={{ fontSize: '0.75rem', color: '#9ca3af', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Invited to Group</p>
+                                                <p style={{ color: 'white', fontWeight: 'bold' }}>
                                                     {req.groupId.name}
                                                 </p>
                                             </div>
                                         )}
 
                                         {req.message && (
-                                            <div className="bg-gray-800/30 p-4 rounded-xl mb-6 italic text-gray-300 text-sm relative">
-                                                <span className="absolute -top-2 -left-1 text-4xl text-gray-700 font-serif leading-none">"</span>
-                                                {req.message}
-                                                <span className="absolute -bottom-4 -right-1 text-4xl text-gray-700 font-serif leading-none">"</span>
+                                            <div className="sg-req-message">
+                                                "{req.message}"
                                             </div>
                                         )}
 
-                                        <div className="grid grid-cols-2 gap-3 mt-2">
+                                        <div className="sg-req-actions">
                                             <button
                                                 onClick={() => handleRespond(req._id, 'accepted')}
-                                                className="bg-green-600 hover:bg-green-500 text-white py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-green-900/20"
+                                                className="sg-btn sg-btn-accept"
                                             >
                                                 Accept
                                             </button>
                                             <button
                                                 onClick={() => handleRespond(req._id, 'rejected')}
-                                                className="bg-[#2a2a2a] hover:bg-[#333] text-gray-300 hover:text-white py-2.5 rounded-xl text-sm font-bold transition-all border border-white/5"
+                                                className="sg-btn sg-btn-reject"
                                             >
                                                 Reject
                                             </button>
@@ -269,40 +259,33 @@ const StudyGroupsPage = () => {
 
                     {/* FIND PARTNERS TAB */}
                     {activeTab === 'find' && (
-                        <div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                {students.length === 0 ? (
-                                    <div className="col-span-full py-20 text-center">
-                                        <p className="text-gray-500 text-lg">No other students found in your batch.</p>
-                                        <p className="text-gray-600 text-sm mt-2">Invite your batchmates to join the platform!</p>
-                                    </div>
-                                ) : (
-                                    students.map(student => (
-                                        <div key={student._id} className="bg-[#1e1e1e] border border-white/10 p-5 rounded-2xl flex items-center justify-between group hover:border-blue-500/50 hover:bg-[#252525] transition-all duration-300">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 p-[2px]">
-                                                    <div className="w-full h-full rounded-full bg-[#1e1e1e] flex items-center justify-center">
-                                                        <span className="text-white font-bold text-lg bg-gradient-to-tr from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                                                            {student.name.charAt(0)}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <p className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{student.name}</p>
-                                                    <p className="text-xs text-gray-500 font-medium bg-gray-800/50 px-2 py-0.5 rounded w-fit mt-1">Student</p>
-                                                </div>
+                        <div className="sg-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+                            {students.length === 0 ? (
+                                <div className="sg-empty-state" style={{ background: 'transparent', border: 'none' }}>
+                                    <p className="sg-empty-text">No other students found in your batch.</p>
+                                </div>
+                            ) : (
+                                students.map(student => (
+                                    <div key={student._id} className="sg-user-item">
+                                        <div className="sg-user-info">
+                                            <div className="sg-member-avatar">
+                                                {student.name.charAt(0)}
                                             </div>
-                                            <button
-                                                onClick={() => handleOpenInvite(student)}
-                                                className="p-2.5 bg-blue-600/10 text-blue-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all transform hover:scale-110 active:scale-95 shadow-lg shadow-blue-900/10"
-                                                title="Invite to Study Group"
-                                            >
-                                                <UserPlus size={20} />
-                                            </button>
+                                            <div>
+                                                <p style={{ color: 'white', fontWeight: '500' }}>{student.name}</p>
+                                                <span style={{ fontSize: '0.75rem', color: '#9ca3af', background: 'rgba(255,255,255,0.05)', padding: '0.125rem 0.5rem', borderRadius: '4px' }}>Student</span>
+                                            </div>
                                         </div>
-                                    ))
-                                )}
-                            </div>
+                                        <button
+                                            onClick={() => handleOpenInvite(student)}
+                                            className="sg-icon-btn"
+                                            title="Invite to Study Group"
+                                        >
+                                            <UserPlus size={20} />
+                                        </button>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     )}
 
