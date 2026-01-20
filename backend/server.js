@@ -247,6 +247,10 @@ app.use("/api/leaderboard", standardLimiter, leaderboardRoutes);
 app.use("/api/certificates", standardLimiter, certificateRoutes);
 app.use("/api/trainers", standardLimiter, trainerRoutes);
 app.use("/api/notifications", standardLimiter, notificationRoutes);
+// Study Groups (Combined Study)
+const studyGroupRoutes = require("./routes/studyGroupRoutes");
+app.use("/api/study-groups", standardLimiter, studyGroupRoutes);
+
 app.use("/api/points", standardLimiter, pointsRoutes);
 app.use("/api/rewatch", standardLimiter, rewatchRequestRoutes);
 app.use('/api/blogs', standardLimiter, blogRoutes);

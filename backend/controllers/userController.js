@@ -959,8 +959,8 @@ exports.bulkCreateUsers = async (req, res) => {
 // Create single user
 exports.createSingleUser = async (req, res) => {
   try {
-    // Destructure all fields including employeeId (PASSWORD REMOVED)
-    const { name, email, role, batch, adminPasskey, employeeId, designation, yearsOfExperience } = req.body;
+    // Destructure all fields including password and employeeId
+    const { name, email, role, batch, adminPasskey, employeeId, designation, yearsOfExperience, password } = req.body;
 
     if (!name || !email || !role) {
       return res.status(400).json({ message: 'Please provide all required fields' });
@@ -986,23 +986,35 @@ exports.createSingleUser = async (req, res) => {
       return res.status(400).json({ message: 'User with this email already exists' });
     }
 
-    // No password hashing for MSAL users
+    // Hash password if provided, otherwise default to MSAL
+    let passwordHash = 'MSAL_AUTH_REQUIRED_NO_PASSWORD';
+    let authType = 'MSAL';
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      passwordHash = await bcrypt.hash(password, salt);
+      authType = 'Local';
+    }
 
     const user = await User.create({
       name,
       email: email.toLowerCase().trim(),
-      passwordHash: 'MSAL_AUTH_REQUIRED_NO_PASSWORD',
-      authType: 'MSAL',
+      passwordHash,
+      authType,
       role,
       batch,
       ...(employeeId && { employeeId }),
       ...(designation && { designation }),
-      ...(yearsOfExperience && { yearsOfExperience })
+      ...(yearsOfExperience && { yearsOfExperience }),
+      rewardPoints: 0,
+      enrolledCourses: []
     });
 
+    // Return successful response
     res.status(201).json(user);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('createSingleUser error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 

@@ -88,6 +88,7 @@ export default function Sidebar({ isHovered, onHoverChange }) {
     // ==========================================
     { to: '/community/blogs/my', label: 'My Blogs', icon: FaEdit, show: role === 'Student' },
     { to: '/community/blogs', label: 'Community Blogs', icon: FaBlog, show: true },
+    { to: '/community/study-groups', label: 'Study Groups', icon: FaUsers, show: true },
     { to: '/admin/blogs/reviews', label: 'Blog Reviews', icon: FaCheckCircle, show: role === 'Master' },
 
     // ==========================================

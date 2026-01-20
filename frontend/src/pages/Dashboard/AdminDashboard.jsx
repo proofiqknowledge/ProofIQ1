@@ -89,7 +89,10 @@ export default function AdminDashboard() {
         email: '',
         role: 'Student',
         adminPasskey: '',
+        role: 'Student',
+        adminPasskey: '',
         employeeId: '',
+        password: '', // New password field
     });
     const [creatingUser, setCreatingUser] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -447,7 +450,7 @@ export default function AdminDashboard() {
 
     const handleCreateUser = async () => {
         // ✅ Basic validation - only required fields
-        if (!newUser.name || !newUser.email || !newUser.role) {
+        if (!newUser.name || !newUser.email || !newUser.role || !newUser.password) {
             toast.error('Please fill all required fields');
             return;
         }
@@ -464,6 +467,7 @@ export default function AdminDashboard() {
             email: newUser.email,
             role: newUser.role,
             employeeId: newUser.employeeId || undefined, // ✅ Send only if provided
+            password: newUser.password, // ✅ Include password
             ...(newUser.role === 'Admin' && { adminPasskey: newUser.adminPasskey }),
         };
 
@@ -481,6 +485,7 @@ export default function AdminDashboard() {
                 role: 'Student',
                 adminPasskey: '',
                 employeeId: '',
+                password: '',
             });
 
             await fetchUsers(); // Refresh user list
@@ -1429,6 +1434,39 @@ export default function AdminDashboard() {
                                         <option value="Trainer">Trainer</option>
                                         <option value="Admin">Admin</option>
                                     </select>
+                                </div>
+
+                                <div style={formGroupStyle}>
+                                    <label style={labelStyle}>Password</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <input
+                                            style={inputStyle}
+                                            type={showPassword ? "text" : "password"}
+                                            value={newUser.password}
+                                            onChange={(e) =>
+                                                setNewUser({ ...newUser, password: e.target.value })
+                                            }
+                                            placeholder="Set user password"
+                                            autoComplete="new-password"
+                                            name="user_new_password"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            style={{
+                                                position: 'absolute',
+                                                right: '10px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                background: 'none',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                color: COLORS.textSecondary
+                                            }}
+                                        >
+                                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {newUser.role === 'Admin' && (

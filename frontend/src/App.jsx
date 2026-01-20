@@ -21,6 +21,8 @@ import BlogFeed from "./pages/Community/BlogFeed";
 import AdminBlogReviews from "./pages/Admin/AdminBlogReviews";
 import BlogDetail from "./pages/Community/BlogDetail";
 import EditBlog from "./pages/Community/EditBlog";
+import StudyGroupsPage from './pages/Community/StudyGroupsPage';
+import AdminStudyGroups from './pages/Admin/AdminStudyGroups';
 
 // ⭐ Auth Pages
 import Login from "./pages/Auth/Login";
@@ -324,6 +326,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/study-groups"
+              element={
+                <ProtectedRoute role={["Admin", "Master"]}>
+                  <AdminStudyGroups />
+                </ProtectedRoute>
+              }
+            />
 
             {/*  Trainer Pages */}
             <Route
@@ -518,6 +528,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MyBlogs />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/community/study-groups"
+              element={
+                <ProtectedRoute>
+                  <StudyGroupsPage />
                 </ProtectedRoute>
               }
             />
