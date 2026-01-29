@@ -1,0 +1,160 @@
+.reexam-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.reexam-modal-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.reexam-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reexam-modal-close:hover {
+  color: #333;
+}
+
+.reexam-modal-title {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.reexam-form-group {
+  margin-bottom: 16px;
+}
+
+.reexam-form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 13px;
+}
+
+.reexam-form-group input,
+.reexam-form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.reexam-form-group input:disabled,
+.reexam-form-group textarea:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.reexam-form-group input:focus,
+.reexam-form-group textarea:focus {
+  outline: none;
+  border-color: #9b1c36;
+  box-shadow: 0 0 0 3px rgba(155, 28, 54, 0.1);
+}
+
+.reexam-form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.reexam-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.reexam-error-message {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.reexam-success-message {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 15px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.reexam-modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.reexam-btn-cancel,
+.reexam-btn-submit {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reexam-btn-cancel {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.reexam-btn-cancel:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.reexam-btn-submit {
+  background-color: #9b1c36;
+  color: white;
+}
+
+.reexam-btn-submit:hover:not(:disabled) {
+  background-color: #7a1629;
+}
+
+.reexam-btn-submit:disabled,
+.reexam-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

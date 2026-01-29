@@ -1,0 +1,106 @@
+config:
+  target: 'http://localhost:5000'
+  phases:
+    - duration: 30
+      arrivalRate: 2
+      name: "Warm up (2 users/sec)"
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 10
+      name: "Ramp up (5-10 users/sec)"
+    - duration: 60
+      arrivalRate: 20
+      name: "Sustained Load (20 users/sec)"
+  
+  # Ensure we capture metrics
+  plugins:
+    ensure: {}
+    metrics-by-endpoint: {}
+  
+  ensure:
+    maxErrorRate: 1
+    p95: 2000
+
+  # Variables for dynamic data
+  variables:
+    password: "Password123!"
+
+  processor: "./processor.js"
+
+scenarios:
+  - name: "Trainee Flow (Register -> Dashboard -> Exam)"
+    weight: 70
+    flow:
+      - log: "New Trainee Registering..."
+      - function: "generateRandomUser"
+      - post:
+          url: "/api/auth/register"
+          json:
+            name: "{{ name }}"
+            email: "{{ email }}"
+            password: "{{ password }}"
+            role: "Trainee"
+          capture:
+            - json: "$.token"
+              as: "token"
+            - json: "$._id"
+              as: "userId"
+      - think: 1
+      - log: "Trainee Fetching Dashboard..."
+      - get:
+          url: "/api/courses"
+          headers:
+            Authorization: "Bearer {{ token }}"
+      - think: 2
+      - log: "Trainee Checking Exams..."
+      - get:
+          url: "/api/exams/assigned/me"
+          headers:
+            Authorization: "Bearer {{ token }}"
+      
+  - name: "Admin Flow (Register -> Users -> Exams)"
+    weight: 10
+    flow:
+      - log: "New Admin Registering..."
+      - function: "generateRandomUser"
+      - post:
+          url: "/api/auth/register"
+          json:
+            name: "{{ name }}"
+            email: "{{ email }}"
+            password: "{{ password }}"
+            role: "Admin"
+          capture:
+            - json: "$.token"
+              as: "token"
+      - think: 1
+      - get:
+          url: "/api/users"
+          headers:
+            Authorization: "Bearer {{ token }}"
+      - think: 1
+      - get:
+          url: "/api/admin/exams"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+  - name: "Trainer Flow"
+    weight: 20
+    flow:
+      - log: "New Trainer Registering..."
+      - function: "generateRandomUser"
+      - post:
+          url: "/api/auth/register"
+          json:
+            name: "{{ name }}"
+            email: "{{ email }}"
+            password: "{{ password }}"
+            role: "Trainer"
+          capture:
+            - json: "$.token"
+              as: "token"
+      - think: 1
+      - get:
+          url: "/api/trainers/courses"  # Guessed route based on list, verifying later
+          headers:
+            Authorization: "Bearer {{ token }}"

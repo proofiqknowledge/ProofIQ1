@@ -1,0 +1,335 @@
+/* Leaderboard Page Container */
+.leaderboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Header Section */
+.leaderboard-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #6C6E70;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.stat-card {
+    padding: 24px;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.gold {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.stat-card.blue {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.stat-card.green {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.stat-title {
+    font-size: 18px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.stat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.stat-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.stat-list-rank {
+    opacity: 0.8;
+    width: 20px;
+}
+
+.stat-list-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stat-list-empty {
+    font-size: 14px;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.stat-unit {
+    font-size: 16px;
+    font-weight: 500;
+    opacity: 0.8;
+    margin-left: 4px;
+}
+
+/* Table Section */
+.leaderboard-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid #E8EAED;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.leaderboard-table th {
+    background-color: #1A1A1A;
+    color: white;
+    padding: 16px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.leaderboard-table td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #F5F6F7;
+    vertical-align: middle;
+}
+
+.leaderboard-table tr:last-child td {
+    border-bottom: none;
+}
+
+.leaderboard-table tr:hover {
+    background-color: #F9FAFB;
+}
+
+/* Rank Styling */
+.rank-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rank-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.rank-badge.top-3 {
+    background-color: #1A1A1A;
+    color: white;
+}
+
+.rank-badge.normal {
+    color: #6C6E70;
+    background-color: #F5F6F7;
+}
+
+.trophy-icon {
+    font-size: 20px;
+}
+
+.trophy-gold {
+    color: #FFD700;
+    filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3));
+}
+
+.trophy-silver {
+    color: #C0C0C0;
+    filter: drop-shadow(0 2px 4px rgba(192, 192, 192, 0.3));
+}
+
+.trophy-bronze {
+    color: #CD7F32;
+    filter: drop-shadow(0 2px 4px rgba(205, 127, 50, 0.3));
+}
+
+/* User Info */
+.user-name {
+    font-weight: 600;
+    color: #1A1A1A;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-email {
+    font-size: 12px;
+    color: #8B8E91;
+    margin-top: 4px;
+}
+
+.elite-tag {
+    font-size: 10px;
+    background-color: #FEF3C7;
+    color: #B45309;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Employee ID */
+.employee-id {
+    font-family: 'Monaco', monospace;
+    font-size: 13px;
+    color: #4D4F52;
+    background-color: #F5F6F7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* Points */
+.points-cell {
+    font-weight: 700;
+    color: #9B1C36;
+    font-size: 18px;
+}
+
+/* Badges */
+.badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-elite {
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    color: white;
+    box-shadow: 0 2px 4px rgba(255, 165, 0, 0.3);
+}
+
+.badge-platinum {
+    background: linear-gradient(90deg, #E2E8F0, #94A3B8);
+    color: #1E293B;
+    border: 1px solid #CBD5E1;
+}
+
+.badge-gold {
+    background-color: #FEF9C3;
+    color: #854D0E;
+    border: 1px solid #FEF08A;
+}
+
+.badge-silver {
+    background-color: #F3F4F6;
+    color: #1F2937;
+    border: 1px solid #E5E7EB;
+}
+
+.badge-bronze {
+    background-color: #FFEDD5;
+    color: #9A3412;
+    border: 1px solid #FED7AA;
+}
+
+.badge-none {
+    background-color: #F9FAFB;
+    color: #6B7280;
+    border: 1px solid #E5E7EB;
+}
+
+/* Elite Row Highlight */
+.row-elite {
+    background-color: #FFFBEB !important;
+    /* Light yellow bg */
+    border-left: 4px solid #F59E0B;
+}
+
+.row-elite:hover {
+    background-color: #FEF3C7 !important;
+}
+
+/* Loading & Error */
+.loading-container,
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #E5E7EB;
+    border-top-color: #9B1C36;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-text {
+    color: #EF4444;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.empty-state {
+    padding: 48px;
+    text-align: center;
+    color: #6C6E70;
+    font-size: 16px;
+}

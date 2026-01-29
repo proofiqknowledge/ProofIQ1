@@ -1,0 +1,9 @@
+{
+  "configurations": {
+    "production": {
+      "appLocation": ".",
+      "outputLocation": "dist",
+      "env": "production"
+    }
+  }
+}

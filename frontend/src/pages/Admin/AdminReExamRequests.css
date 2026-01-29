@@ -1,0 +1,381 @@
+.admin-reexam-container {
+  padding: 20px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.admin-reexam-header {
+  margin-bottom: 24px;
+}
+
+.admin-reexam-header h1 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.admin-reexam-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.admin-reexam-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #374151;
+}
+
+.filter-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.filter-btn.active {
+  background-color: #9b1c36;
+  color: white;
+  border-color: #9b1c36;
+}
+
+.admin-reexam-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.admin-reexam-loading,
+.admin-reexam-empty {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.admin-reexam-table-wrapper {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
+.admin-reexam-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-reexam-table thead {
+  background-color: #f3f4f6;
+}
+
+.admin-reexam-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  font-size: 13px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-reexam-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.admin-reexam-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-approved {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.admin-reexam-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.action-reason {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+.action-reason:hover {
+  background-color: #c7d2fe;
+}
+
+.action-approve {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.action-approve:hover:not(:disabled) {
+  background-color: #bbf7d0;
+}
+
+.action-reject {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.action-reject:hover:not(:disabled) {
+  background-color: #fecaca;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-reexam-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+.admin-reexam-pagination button {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.admin-reexam-pagination button:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.admin-reexam-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Modal Styles */
+.admin-reexam-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.admin-reexam-modal-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 550px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.admin-reexam-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.admin-reexam-modal-close:hover {
+  color: #333;
+}
+
+.admin-reexam-modal-title {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.admin-reexam-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.detail-item label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.admin-reexam-reason-box {
+  background-color: #f9fafb;
+  padding: 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.admin-reexam-reason-box label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.admin-reexam-reason-box p {
+  margin: 0;
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.admin-reexam-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn-close {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.modal-btn-close:hover {
+  background-color: #e5e7eb;
+}
+
+.modal-btn-approve {
+  background-color: #10b981;
+  color: white;
+}
+
+.modal-btn-approve:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.modal-btn-reject {
+  background-color: #ef4444;
+  color: white;
+}
+
+.modal-btn-reject:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.modal-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-reexam-container {
+    padding: 12px;
+  }
+
+  .admin-reexam-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-reexam-table {
+    font-size: 12px;
+  }
+
+  .admin-reexam-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

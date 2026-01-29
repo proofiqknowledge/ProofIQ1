@@ -1,0 +1,245 @@
+/* NextTopicsExams.css */
+
+/* --- Modal Mode --- */
+.next-topics-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.next-topics-modal-content {
+  background-color: white;
+  width: 90%;
+  max-width: 500px;
+  max-height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+.next-topics-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9fafb;
+}
+
+.next-topics-modal-close:hover {
+  color: #1f2937;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+}
+
+/* --- Accordion Mode --- */
+.next-topics-exams-container {
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.next-topics-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background-color: #f8fafc;
+  transition: background-color 0.2s;
+}
+
+.next-topics-header:hover {
+  background-color: #f1f5f9;
+}
+
+.next-topics-title span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.next-topics-toggle {
+  color: #64748b;
+  display: flex;
+  align-items: center;
+}
+
+/* --- List Items --- */
+.next-topics-list {
+  padding: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.next-topics-list.modal-list {
+  max-height: 60vh;
+}
+
+.next-topics-empty {
+  padding: 30px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.next-topics-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  background-color: #fff;
+}
+
+.next-topics-item:hover:not(.locked) {
+  background-color: #f0f9ff;
+  border-color: #bae6fd;
+  transform: translateY(-1px);
+}
+
+.next-topics-item.current {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+}
+
+.next-topics-item.locked {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  opacity: 0.7;
+}
+
+.next-topics-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.next-topics-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.next-topics-item.locked .next-topics-icon-container {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+}
+
+.next-topics-exam-icon {
+  color: #9333ea;
+}
+
+.next-topics-item.next-topics-exam .next-topics-icon-container {
+  background-color: #f3e8ff;
+}
+
+.next-topics-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.next-topics-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.next-topics-item.locked .next-topics-item-title {
+  color: #6b7280;
+}
+
+.next-topics-item-meta {
+  display: flex;
+  gap: 8px;
+}
+
+.next-topics-meta-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #64748b;
+  background-color: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.next-topics-meta-badge.exam {
+  color: #7e22ce;
+  background-color: #f3e8ff;
+}
+
+/* --- Badges --- */
+.next-topics-current-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #2563eb;
+  background-color: #dbeafe;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.next-topics-locked-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+  background-color: #e5e7eb;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Scrollbar Styling */
+.next-topics-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.next-topics-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.next-topics-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.next-topics-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
