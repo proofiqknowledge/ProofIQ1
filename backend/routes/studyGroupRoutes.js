@@ -12,7 +12,9 @@ const {
     leaveGroup,
     getAllGroupsAdmin,
     addMemberAdmin,
-    removeMemberAdmin
+    removeMemberAdmin,
+    getGroupMessages,
+    sendGroupMessage
 } = require('../controllers/studyGroupController');
 
 // ==========================================
@@ -39,6 +41,12 @@ router.put('/:groupId', auth, updateGroup);
 
 // Leave a group
 router.delete('/:groupId/leave', auth, leaveGroup);
+
+// Get chat messages
+router.get('/:groupId/messages', auth, getGroupMessages);
+
+// Send a message
+router.post('/:groupId/messages', auth, sendGroupMessage);
 
 // ==========================================
 // Admin Routes

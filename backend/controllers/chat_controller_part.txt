@@ -1,0 +1,65 @@
+
+// ==========================================
+// 11. Get Group Messages
+// ==========================================
+exports.getGroupMessages = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const userId = req.user.id;
+
+        // Check if user is member of the group
+        const group = await StudyGroup.findById(groupId);
+        if (!group) return res.status(404).json({ message: "Group not found." });
+
+        if (!group.members.includes(userId)) {
+            return res.status(403).json({ message: "Access denied. Not a member." });
+        }
+
+        const messages = await GroupMessage.find({ groupId })
+            .populate('sender', 'name email')
+            .sort({ createdAt: 1 })
+            .limit(50); // Limit to last 50 messages for now
+
+        res.json(messages);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// ==========================================
+// 12. Send Group Message
+// ==========================================
+exports.sendGroupMessage = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const { content } = req.body;
+        const userId = req.user.id;
+
+        if (!content || !content.trim()) {
+            return res.status(400).json({ message: "Message cannot be empty." });
+        }
+
+        const group = await StudyGroup.findById(groupId);
+        if (!group) return res.status(404).json({ message: "Group not found." });
+
+        if (!group.members.includes(userId)) {
+            return res.status(403).json({ message: "Access denied. Not a member." });
+        }
+
+        const message = new GroupMessage({
+            groupId,
+            sender: userId,
+            content
+        });
+
+        await message.save();
+
+        // Populate sender info for immediate frontend display
+        await message.populate('sender', 'name email');
+
+        res.status(201).json(message);
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};

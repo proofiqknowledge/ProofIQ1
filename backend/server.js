@@ -223,9 +223,11 @@ const visualizeRoutes = require("./routes/visualizeRoute");
 app.use("/api/visualize", visualizeRoutes);
 const executionRoutes = require("./routes/executionRoutes");
 const pythonRoutes = require("./routes/pythonRoutes");
+const savedFileRoutes = require("./routes/savedFileRoutes");
 
 // 🛡️ Sensitive / Strict Routes
 app.use("/api/auth", strictLimiter, authRoutes);
+app.use("/api/saved-files", strictLimiter, savedFileRoutes);
 app.use("/api/admin/exams", strictLimiter, adminExamRoutes);
 app.use("/api/admin/blogs", strictLimiter, adminBlogRoutes);
 app.use("/api/users", strictLimiter, userRoutes); // User management is sensitive

@@ -1,31 +1,31 @@
 const mongoose = require('mongoose');
 
 const studyGroupSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
+  name: {
+    type: String,
     required: true,
     trim: true,
-    default: function() {
-      return `Group ${new Date().getTime().toString().substr(-6)}`; 
+    default: function () {
+      return `Group ${new Date().getTime().toString().substr(-6)}`;
     }
   },
-  createdBy: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
-  },
-  members: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User' 
-  }],
-  batch: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Batch',
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
-  isActive: { 
-    type: Boolean, 
-    default: true 
+  members: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  batch: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Batch',
+    required: false // Made optional to support cross-batch or non-batch groups
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   },
   // Optional: Add description or topic focus later
 }, { timestamps: true });

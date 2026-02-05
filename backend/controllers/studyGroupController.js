@@ -2,25 +2,22 @@ const StudyGroup = require('../models/StudyGroup');
 const StudyRequest = require('../models/StudyRequest');
 const User = require('../models/User');
 const Batch = require('../models/Batch');
+const GroupMessage = require('../models/GroupMessage');
 
 // ==========================================
 // 1. Get Students for Invite
 // ==========================================
 exports.getStudentsForInvite = async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        if (!user.batch) {
-            // Return empty list if no batch, instead of error to avoid blocking the UI
-            return res.json([]);
-        }
 
-        // Find students in the same batch, excluding self
+        // Find all students in the portal, excluding self
+        // REMOVED batch restriction as per user request (allow cross-batch study groups)
         const students = await User.find({
-            batch: user.batch,
-            role: 'Student',
+            role: 'Student', // Ensure we only get students
             _id: { $ne: user._id }
         }).select('name email');
 
@@ -36,7 +33,7 @@ exports.getStudentsForInvite = async (req, res) => {
 exports.sendStudyRequest = async (req, res) => {
     try {
         const { toUserId, groupId, message } = req.body;
-        const fromUserId = req.user.userId;
+        const fromUserId = req.user.id;
 
         if (toUserId === fromUserId) {
             return res.status(400).json({ message: "Cannot invite yourself." });
@@ -87,7 +84,7 @@ exports.sendStudyRequest = async (req, res) => {
 exports.getMyRequests = async (req, res) => {
     try {
         const requests = await StudyRequest.find({
-            toUser: req.user.userId,
+            toUser: req.user.id,
             status: 'pending'
         })
             .populate('fromUser', 'name email')
@@ -106,7 +103,7 @@ exports.respondToRequest = async (req, res) => {
     try {
         const { requestId } = req.params;
         const { status } = req.body; // 'accepted' or 'rejected'
-        const userId = req.user.userId;
+        const userId = req.user.id;
 
         const request = await StudyRequest.findById(requestId);
         if (!request) return res.status(404).json({ message: "Request not found." });
@@ -148,8 +145,8 @@ exports.respondToRequest = async (req, res) => {
 
                 group = new StudyGroup({
                     name: `${sender.name} & Friends`, // Default name
-                    createdBy: request.fromUser, // Original inviter is creator? Or acceptor? Let's say inviter.
-                    batch: sender.batch,
+                    createdBy: request.fromUser,
+                    batch: sender.batch || null, // Handle undefined batch
                     members: [request.fromUser, userId] // Add both
                 });
                 await group.save();
@@ -174,7 +171,7 @@ exports.respondToRequest = async (req, res) => {
 exports.getMyGroups = async (req, res) => {
     try {
         const groups = await StudyGroup.find({
-            members: req.user.userId,
+            members: req.user.id,
             isActive: true
         })
             .populate('members', 'name email')
@@ -197,7 +194,7 @@ exports.updateGroup = async (req, res) => {
         // Allow any member to update name? Or just creator? description says "they can edit"
         const group = await StudyGroup.findOne({
             _id: groupId,
-            members: req.user.userId
+            members: req.user.id
         });
 
         if (!group) return res.status(404).json({ message: "Group not found or access denied." });
@@ -217,7 +214,7 @@ exports.updateGroup = async (req, res) => {
 exports.leaveGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const userId = req.user.userId;
+        const userId = req.user.id;
 
         const group = await StudyGroup.findById(groupId);
         if (!group) return res.status(404).json({ message: "Group not found." });
@@ -299,3 +296,68 @@ exports.removeMemberAdmin = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+// ==========================================
+// 11. Get Group Messages
+// ==========================================
+exports.getGroupMessages = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const userId = req.user.id;
+
+        // Check if user is member of the group
+        const group = await StudyGroup.findById(groupId);
+        if (!group) return res.status(404).json({ message: "Group not found." });
+
+        if (!group.members.includes(userId)) {
+            return res.status(403).json({ message: "Access denied. Not a member." });
+        }
+
+        const messages = await GroupMessage.find({ groupId })
+            .populate('sender', 'name email')
+            .sort({ createdAt: 1 })
+            .limit(50); // Limit to last 50 messages for now
+
+        res.json(messages);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// ==========================================
+// 12. Send Group Message
+// ==========================================
+exports.sendGroupMessage = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const { content } = req.body;
+        const userId = req.user.id;
+
+        if (!content || !content.trim()) {
+            return res.status(400).json({ message: "Message cannot be empty." });
+        }
+
+        const group = await StudyGroup.findById(groupId);
+        if (!group) return res.status(404).json({ message: "Group not found." });
+
+        if (!group.members.includes(userId)) {
+            return res.status(403).json({ message: "Access denied. Not a member." });
+        }
+
+        const message = new GroupMessage({
+            groupId,
+            sender: userId,
+            content
+        });
+
+        await message.save();
+
+        // Populate sender info for immediate frontend display
+        await message.populate('sender', 'name email');
+
+        res.status(201).json(message);
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};      
