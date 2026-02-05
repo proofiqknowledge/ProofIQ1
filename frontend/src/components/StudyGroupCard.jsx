@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Users, Edit2, LogOut, UserPlus, Check, X } from 'lucide-react';
+import { Users, Edit2, LogOut, UserPlus, Check, X, MessageSquare } from 'lucide-react';
 
-const StudyGroupCard = ({ group, currentUserId, onUpdateName, onLeave, onInviteMember }) => {
+const StudyGroupCard = ({ group, currentUserId, onUpdateName, onLeave, onInviteMember, onChat }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(group.name);
 
@@ -105,6 +105,15 @@ const StudyGroupCard = ({ group, currentUserId, onUpdateName, onLeave, onInviteM
                 >
                     <LogOut size={16} />
                     Leave
+                </button>
+
+                <button
+                    onClick={() => onChat(group)}
+                    className="sg-btn sg-btn-primary"
+                    style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', border: '1px solid rgba(59, 130, 246, 0.2)' }}
+                >
+                    <MessageSquare size={16} />
+                    Chat
                 </button>
 
                 <button

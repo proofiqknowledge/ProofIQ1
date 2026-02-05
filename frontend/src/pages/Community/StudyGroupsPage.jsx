@@ -12,6 +12,7 @@ import {
     leaveGroup
 } from '../../services/studyGroupService';
 import InviteRequestModal from '../../components/InviteRequestModal';
+import GroupChatModal from '../../components/GroupChatModal';
 import StudyGroupCard from '../../components/StudyGroupCard';
 
 import './StudyGroups.css';
@@ -27,6 +28,10 @@ const StudyGroupsPage = () => {
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
     const [inviteTargetUser, setInviteTargetUser] = useState(null);
     const [inviteContextGroupId, setInviteContextGroupId] = useState(null);
+
+    // Chat State
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [currentChatGroup, setCurrentChatGroup] = useState(null);
 
     const { user } = useSelector(state => state.auth);
 
@@ -58,6 +63,11 @@ const StudyGroupsPage = () => {
         setInviteTargetUser(user);
         setInviteContextGroupId(groupId);
         setIsInviteModalOpen(true);
+    };
+
+    const handleOpenChat = (group) => {
+        setCurrentChatGroup(group);
+        setIsChatOpen(true);
     };
 
     const handleSendInvite = async (toUserId, groupId, message) => {
@@ -190,6 +200,7 @@ const StudyGroupsPage = () => {
                                         onUpdateName={handleUpdateGroupName}
                                         onLeave={handleLeaveGroup}
                                         onInviteMember={handleInviteFromGroup}
+                                        onChat={handleOpenChat}
                                     />
                                 ))
                             )}
@@ -299,6 +310,13 @@ const StudyGroupsPage = () => {
                 toUser={inviteTargetUser}
                 existingGroups={groups}
                 onSendInvite={handleSendInvite}
+            />
+
+            <GroupChatModal
+                isOpen={isChatOpen}
+                onClose={() => setIsChatOpen(false)}
+                group={currentChatGroup}
+                currentUser={user}
             />
         </div>
     );

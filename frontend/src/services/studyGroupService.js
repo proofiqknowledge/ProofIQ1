@@ -59,3 +59,15 @@ export const removeMemberAdmin = async (groupId, userId) => {
     const response = await api.delete(`/study-groups/admin/${groupId}/member`, { data: { userId } });
     return response.data;
 };
+
+// Chat: Get messages
+export const getGroupMessages = async (groupId) => {
+    const response = await api.get(`/study-groups/${groupId}/messages`);
+    return response.data;
+};
+
+// Chat: Send message
+export const sendGroupMessage = async (groupId, content) => {
+    const response = await api.post(`/study-groups/${groupId}/messages`, { content });
+    return response.data;
+};

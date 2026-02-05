@@ -4,8 +4,10 @@ import CodeEditor from './Editor';
 import LanguageSelector from './LanguageSelector';
 import ControlButtons from './ControlButtons';
 import VisualizationPane from './VisualizationPane';
-import { executeCode,visualizeCode } from '../../services/visualizationService';
+import { executeCode, visualizeCode } from '../../services/visualizationService';
+import { getSavedFiles, saveFile, deleteFile } from '../../services/savedFileService';
 import { COLORS, SPACING, SHADOWS } from '../../constants/designSystem';
+import { FaSave, FaTrash, FaFile, FaPlus, FaFolderOpen, FaEdit } from 'react-icons/fa';
 
 const DEFAULT_CODE = {
     python: `x = 5
@@ -107,6 +109,162 @@ const CodePlayground = () => {
     const [input, setInput] = useState('');
     const [runMetrics, setRunMetrics] = useState(null);
 
+    // Saved Files State
+    const [savedFiles, setSavedFiles] = useState([]);
+    const [currentFileId, setCurrentFileId] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [newFileName, setNewFileName] = useState('');
+    const [isCreatingFile, setIsCreatingFile] = useState(false);
+
+    // Modal State
+    const [showModal, setShowModal] = useState(false);
+    const [modalConfig, setModalConfig] = useState({ type: '', message: '', onConfirm: null, inputValue: '' });
+
+    useEffect(() => {
+        loadSavedFiles();
+    }, []);
+
+    const loadSavedFiles = async () => {
+        try {
+            const files = await getSavedFiles();
+            setSavedFiles(files);
+        } catch (error) {
+            console.error("Failed to load saved files", error);
+        }
+    };
+
+    const handleSave = async () => {
+        if (!code) return;
+
+        if (!currentFileId) {
+            // Show modal to get filename
+            setModalConfig({
+                type: 'input',
+                message: 'Enter file name to save (e.g., myscript.py):',
+                inputValue: '',
+                onConfirm: async (fileName) => {
+                    if (!fileName) return;
+                    await performSave(fileName);
+                }
+            });
+            setShowModal(true);
+        } else {
+            const currentFile = savedFiles.find(f => f._id === currentFileId);
+            const fileName = currentFile ? currentFile.name : '';
+            await performSave(fileName);
+        }
+    };
+
+    const performSave = async (fileName) => {
+        try {
+            const savedFile = await saveFile({
+                _id: currentFileId,
+                name: fileName,
+                language: language,
+                code: code
+            });
+            setSavedFiles(prev => {
+                const exists = prev.find(f => f._id === savedFile._id);
+                if (exists) return prev.map(f => f._id === savedFile._id ? savedFile : f);
+                return [savedFile, ...prev];
+            });
+            setCurrentFileId(savedFile._id);
+        } catch (error) {
+            toast.error('Failed to save file');
+        }
+    };
+
+    const handleFileClick = (file) => {
+        setCurrentFileId(file._id);
+        setCode(file.code);
+        setLanguage(file.language); // Switch language
+        setVisualizationMode(false);
+    };
+
+    const handleDeleteFile = async (e, id) => {
+        e.stopPropagation();
+        setModalConfig({
+            type: 'confirm',
+            message: 'Are you sure you want to delete this file?',
+            onConfirm: async () => {
+                try {
+                    await deleteFile(id);
+                    setSavedFiles(prev => prev.filter(f => f._id !== id));
+                    if (currentFileId === id) {
+                        setCurrentFileId(null);
+                        setCode('');
+                    }
+                } catch (error) {
+                    toast.error('Failed to delete file');
+                }
+            }
+        });
+        setShowModal(true);
+    };
+
+    const handleRenameFile = (e, file) => {
+        e.stopPropagation();
+        setModalConfig({
+            type: 'input',
+            message: 'Enter new file name:',
+            inputValue: file.name,
+            onConfirm: async (newName) => {
+                if (!newName || newName === file.name) return;
+
+                try {
+                    const updatedFile = await saveFile({
+                        _id: file._id,
+                        name: newName,
+                        language: file.language,
+                        code: file.code
+                    });
+                    setSavedFiles(prev => prev.map(f => f._id === file._id ? updatedFile : f));
+                } catch (error) {
+                    toast.error('Failed to rename file');
+                }
+            }
+        });
+        setShowModal(true);
+    };
+
+    const handleCreateNewFile = () => {
+        setModalConfig({
+            type: 'input',
+            message: 'Enter new file name with extension (e.g., script.js, main.c):',
+            inputValue: '',
+            onConfirm: async (name) => {
+                if (!name) return;
+
+                // Detect language from extension
+                const ext = name.split('.').pop().toLowerCase();
+                let newLang = 'python';
+                if (ext === 'js' || ext === 'javascript') newLang = 'javascript';
+                else if (ext === 'c') newLang = 'c';
+                else if (ext === 'cpp' || ext === 'cc') newLang = 'cpp';
+                else if (ext === 'java') newLang = 'java';
+                else if (ext === 'py') newLang = 'python';
+
+                setLanguage(newLang);
+                setCode(DEFAULT_CODE[newLang] || '');
+                setCurrentFileId(null);
+
+                try {
+                    const saved = await saveFile({
+                        name: name,
+                        language: newLang,
+                        code: DEFAULT_CODE[newLang] || ''
+                    });
+                    setSavedFiles(prev => [saved, ...prev]);
+                    setCurrentFileId(saved._id);
+                } catch (err) {
+                    toast.error("Failed to create file");
+                }
+            }
+        });
+        setShowModal(true);
+    };
+
+
     const handleLanguageChange = (newLanguage) => {
         setLanguage(newLanguage);
         setCode(DEFAULT_CODE[newLanguage] || '');
@@ -171,8 +329,8 @@ const CodePlayground = () => {
             }
 
             let result;
-result = await executeCode(code, language, currentInputs);
-setIsWaitingForInput(false);
+            result = await executeCode(code, language, currentInputs);
+            setIsWaitingForInput(false);
 
 
             if (result.success || result.status === 'waiting_for_input') {
@@ -284,6 +442,104 @@ setIsWaitingForInput(false);
         return () => clearTimeout(timeoutId);
     }, [isWaitingForInput]);
 
+    // Custom Modal Component
+    const CustomModal = () => {
+        if (!showModal) return null;
+
+        return (
+            <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                zIndex: 9999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <div style={{
+                    backgroundColor: COLORS.white,
+                    padding: SPACING.lg,
+                    borderRadius: '12px',
+                    boxShadow: SHADOWS.lg,
+                    minWidth: '400px',
+                    maxWidth: '500px'
+                }}>
+                    <h3 style={{ margin: '0 0 16px 0', color: COLORS.primary, fontSize: '18px' }}>
+                        {modalConfig.type === 'confirm' ? 'Confirm' : 'Input Required'}
+                    </h3>
+                    <p style={{ margin: '0 0 20px 0', color: COLORS.textSecondary, fontSize: '14px' }}>
+                        {modalConfig.message}
+                    </p>
+                    {modalConfig.type === 'input' && (
+                        <input
+                            type="text"
+                            value={modalConfig.inputValue}
+                            onChange={(e) => setModalConfig(prev => ({ ...prev, inputValue: e.target.value }))}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    modalConfig.onConfirm(modalConfig.inputValue);
+                                    setShowModal(false);
+                                }
+                            }}
+                            autoFocus
+                            style={{
+                                width: '100%',
+                                padding: '10px 12px',
+                                borderRadius: '6px',
+                                border: `1px solid ${COLORS.mediumGray}`,
+                                fontSize: '14px',
+                                marginBottom: '20px'
+                            }}
+                            placeholder="Enter filename..."
+                        />
+                    )}
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            style={{
+                                padding: '8px 20px',
+                                backgroundColor: COLORS.mediumGray,
+                                color: COLORS.textPrimary,
+                                border: 'none',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: 600,
+                                fontSize: '14px'
+                            }}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (modalConfig.type === 'input') {
+                                    modalConfig.onConfirm(modalConfig.inputValue);
+                                } else {
+                                    modalConfig.onConfirm();
+                                }
+                                setShowModal(false);
+                            }}
+                            style={{
+                                padding: '8px 20px',
+                                backgroundColor: COLORS.primary,
+                                color: COLORS.white,
+                                border: 'none',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: 600,
+                                fontSize: '14px'
+                            }}
+                        >
+                            {modalConfig.type === 'confirm' ? 'Delete' : 'OK'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div
             style={{
@@ -345,7 +601,27 @@ setIsWaitingForInput(false);
                             flexWrap: 'wrap'
                         }}
                     >
+                        <button
+                            onClick={handleSave}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                padding: '8px 16px',
+                                backgroundColor: '#1e1e1e', // Dark button as per image
+                                color: COLORS.white,
+                                border: 'none',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: 600,
+                                fontSize: '14px'
+                            }}
+                        >
+                            <FaSave /> Save
+                        </button>
+
                         <LanguageSelector
+
                             value={language}
                             onChange={handleLanguageChange}
                             disabled={visualizationMode}
@@ -403,13 +679,110 @@ setIsWaitingForInput(false);
                             gap: SPACING.md
                         }}
                     >
-                        {/* Left: Code Editor (70%) */}
+
+                        {/* Left: Sidebar (Saved Files) */}
+                        <div style={{
+                            width: '250px',
+                            backgroundColor: '#1e1e1e',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            color: COLORS.white,
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                padding: '10px 15px',
+                                borderBottom: '1px solid #333',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}>
+                                <span style={{ fontWeight: 600, fontSize: '14px' }}>SAVED FILES</span>
+                                <button
+                                    onClick={handleCreateNewFile}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: COLORS.white,
+                                        cursor: 'pointer',
+                                        fontSize: '16px'
+                                    }}
+                                >
+                                    +
+                                </button>
+                            </div>
+
+                            <div style={{ flex: 1, overflowY: 'auto' }}>
+                                {savedFiles.length === 0 ? (
+                                    <div style={{ padding: '20px', textAlign: 'center', color: '#888', fontSize: '12px' }}>
+                                        No saved files
+                                    </div>
+                                ) : (
+                                    savedFiles.map(file => (
+                                        <div
+                                            key={file._id}
+                                            onClick={() => handleFileClick(file)}
+                                            style={{
+                                                padding: '8px 15px',
+                                                cursor: 'pointer',
+                                                backgroundColor: currentFileId === file._id ? '#37373d' : 'transparent',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                fontSize: '13px'
+                                            }}
+                                            className="file-item"
+                                        >
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                <FaFile size={12} color="#aaa" />
+                                                {file.name}
+                                            </span>
+                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                <button
+                                                    onClick={(e) => handleRenameFile(e, file)}
+                                                    style={{ background: 'none', border: 'none', color: '#bbb', cursor: 'pointer', opacity: 0.8, padding: '2px', transition: 'all 0.2s' }}
+                                                    title="Rename file"
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.opacity = '1';
+                                                        e.currentTarget.style.color = '#4fc3f7';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.opacity = '0.8';
+                                                        e.currentTarget.style.color = '#bbb';
+                                                    }}
+                                                >
+                                                    <FaEdit size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleDeleteFile(e, file._id)}
+                                                    style={{ background: 'none', border: 'none', color: '#bbb', cursor: 'pointer', opacity: 0.8, fontSize: '18px', transition: 'all 0.2s' }}
+                                                    title="Delete file"
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.opacity = '1';
+                                                        e.currentTarget.style.color = '#f44336';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.opacity = '0.8';
+                                                        e.currentTarget.style.color = '#bbb';
+                                                    }}
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Middle: Code Editor */}
                         <div
                             style={{
-                                flex: 7,
+                                flex: 7, // Take remaining space
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: SPACING.sm
+                                gap: SPACING.sm,
+                                minWidth: 0 // Prevent flex overflow
                             }}
                         >
                             <div
@@ -544,6 +917,7 @@ setIsWaitingForInput(false);
                     </div>
                 )}
             </div>
+            <CustomModal />
         </div>
     );
 };

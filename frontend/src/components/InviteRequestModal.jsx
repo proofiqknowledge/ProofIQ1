@@ -24,32 +24,29 @@ const InviteRequestModal = ({ isOpen, onClose, toUser, existingGroups = [], onSe
     if (!isOpen || !toUser) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <div className="bg-[#1e1e1e] rounded-xl border border-white/10 w-full max-w-md shadow-2xl p-6 relative animate-in fade-in zoom-in-95 duration-200">
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-                >
-                    <X size={20} />
+        <div className="inv-modal-overlay">
+            <div className="inv-modal-content">
+                <button onClick={onClose} className="inv-close-btn">
+                    <X size={18} />
                 </button>
 
-                <h2 className="text-xl font-bold text-white mb-1">
-                    Invite {toUser?.name}
+                <h2 className="inv-title">
+                    Invite <span style={{ color: '#60a5fa' }}>{toUser?.name}</span>
                 </h2>
-                <p className="text-gray-400 text-sm mb-6">
-                    Send a request to start a study group or add them to an existing one.
+                <p className="inv-subtitle">
+                    Connect with your peer to start collaborating.
                 </p>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-                    {/* Group Selection (Optional) */}
+                    {/* Group Selection */}
                     {existingGroups && existingGroups.length > 0 && (
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Add to specific group (Optional)</label>
+                            <label className="inv-label">Add to Group (Optional)</label>
                             <select
                                 value={selectedGroupId}
                                 onChange={(e) => setSelectedGroupId(e.target.value)}
-                                className="w-full bg-[#2a2a2a] border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                className="inv-select"
                             >
                                 <option value="">Create New Group</option>
                                 {existingGroups && existingGroups.filter(g => g).map(g => (
@@ -62,27 +59,27 @@ const InviteRequestModal = ({ isOpen, onClose, toUser, existingGroups = [], onSe
                     )}
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1">Message</label>
+                        <label className="inv-label">Message</label>
                         <textarea
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            className="w-full bg-[#2a2a2a] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors h-24 resize-none"
-                            placeholder="Write a message..."
+                            className="inv-textarea"
+                            placeholder="Write a friendly message..."
                         />
                     </div>
 
-                    <div className="flex justify-end pt-2">
+                    <div className="inv-footer">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-400 hover:text-white mr-2 transition-colors"
+                            className="inv-btn-cancel"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all flex items-center gap-2"
+                            className="inv-btn-send"
                         >
                             {loading ? 'Sending...' : 'Send Invite'}
                             {!loading && <Send size={16} />}

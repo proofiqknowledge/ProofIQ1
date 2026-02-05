@@ -1,6 +1,7 @@
 /* Study Groups Container - Dark Theme Overlay */
 .study-groups-container {
-    background-color: #0b0f19; /* Dark background */
+    background-color: #0b0f19;
+    /* Dark background */
     color: #f3f4f6;
     min-height: 100vh;
     padding: 2rem;
@@ -416,8 +417,479 @@
     transition: all 0.2s;
 }
 
-.sg-icon-btn:hover {
+/* Professional Modal Styles */
+.inv-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.inv-modal-content {
+    background: #121212;
+    background: linear-gradient(145deg, #1e1e1e, #121212);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 28rem;
+    padding: 1.5rem;
+    position: relative;
+    animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.inv-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #9ca3af;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.inv-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.inv-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.inv-subtitle {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-bottom: 1.5rem;
+}
+
+.inv-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.inv-select,
+.inv-textarea {
+    width: 100%;
+    background-color: #000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    outline: none;
+    font-family: inherit;
+}
+
+.inv-textarea {
+    resize: none;
+    height: 8rem;
+}
+
+.inv-select:focus,
+.inv-textarea:focus {
+    border-color: #3b82f6;
+    background-color: #0a0a0a;
+}
+
+.inv-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.inv-btn-cancel {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s;
+}
+
+.inv-btn-cancel:hover {
+    color: white;
+}
+
+.inv-btn-send {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: all 0.2s;
+}
+
+.inv-btn-send:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+
+.inv-btn-send:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* =========================================
+   ProofIQ Themed Chat UI (Replaces WA Style)
+   ========================================= */
+
+/* Modal Container */
+.wa-modal-content {
+    background-color: #0b0f19 !important;
+    /* App Main Background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+    border-radius: 1rem !important;
+    /* Matches Cards */
+    width: 100%;
+    max-width: 900px !important;
+    height: 85vh !important;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow: hidden;
+    position: relative;
+    animation: zoomIn 0.2s ease-out;
+}
+
+/* Header */
+.wa-header {
+    background-color: #161b22;
+    /* Darker than body */
+    padding: 1rem 1.5rem;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Separator */
+    z-index: 10;
+}
+
+.wa-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.wa-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(to top right, #3b82f6, #4f46e5);
+    /* Brand Gradient */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.wa-header-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+.wa-group-name {
+    color: #f3f4f6;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.wa-group-members {
+    color: #9ca3af;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 350px;
+}
+
+.wa-header-actions {
+    display: flex;
+    gap: 1rem;
+    color: #9ca3af;
+}
+
+.wa-icon-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.6rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+}
+
+.wa-icon-btn:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+}
+
+.wa-icon-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: transparent;
+    color: #6b7280;
+}
+
+.wa-icon-btn:disabled:hover {
+    background: transparent;
+    color: #6b7280;
+}
+
+/* Chat Body */
+.wa-chat-body {
+    flex: 1;
+    background-color: #0b0f19;
+    /* Match App Bg */
+    /* Optional: Subtle grid pattern or noise instead of doodle */
+    background-image:
+        radial-gradient(circle at 50% 0, rgba(59, 130, 246, 0.05), transparent 70%);
+    overflow-y: auto;
+    padding: 2rem 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Message Bubbles */
+.wa-msg-row {
+    display: flex;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.wa-msg-row.sent {
+    justify-content: flex-end;
+}
+
+.wa-msg-row.received {
+    justify-content: flex-start;
+}
+
+.wa-bubble {
+    max-width: 70%;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #e5e7eb;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Sent Message (Brand Blue) */
+.wa-bubble.sent {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+/* Received Message (Dark Card) */
+.wa-bubble.received {
+    background-color: #1f2937;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* Remove tails for cleaner modern look, or keep them small */
+.wa-bubble.sent::before,
+.wa-bubble.received::before {
+    display: none;
+}
+
+/* Sender Name */
+.wa-sender-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    opacity: 0.9;
+}
+
+/* Defined Colors */
+.wa-color-1 {
+    color: #f472b6;
+}
+
+.wa-color-2 {
+    color: #60a5fa;
+}
+
+.wa-color-3 {
+    color: #fbbf24;
+}
+
+.wa-color-4 {
+    color: #34d399;
+}
+
+.wa-color-5 {
+    color: #a78bfa;
+}
+
+.wa-timestamp {
+    float: right;
+    margin-left: 0.75rem;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    position: relative;
+    top: 2px;
+}
+
+/* Footer */
+.wa-footer {
+    min-height: 80px;
+    background-color: #161b22;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom-left-radius: 1rem;
+    /* Match modal */
+    border-bottom-right-radius: 1rem;
+}
+
+.wa-input-container {
+    flex: 1;
+    background-color: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    padding: 0.25rem;
+    transition: border-color 0.2s;
+}
+
+.wa-input-container:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+.wa-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: white;
+    max-height: 120px;
+    overflow-y: auto;
+    resize: none;
+}
+
+.wa-input:focus {
+    outline: none;
+}
+
+.wa-input::placeholder {
+    color: #6b7280;
+}
+
+.wa-send-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    background-color: #1f2937;
+    color: #9ca3af;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.wa-send-btn.active {
     background-color: #2563eb;
     color: white;
-    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.wa-send-btn.active:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+/* Scrollbar */
+.wa-chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.wa-chat-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.wa-chat-body::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
 }
